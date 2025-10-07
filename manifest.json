@@ -3,8 +3,9 @@
   "short_name": "UBU Hub",
   "description": "A central hub for UBU students",
   "start_url": ".",
+  "scope": ".",
   "display": "standalone",
-  "background_color": "#4f46e5",
+  "background_color": "#ffffff",
   "theme_color": "#4f46e5",
   "icons": [
     {
