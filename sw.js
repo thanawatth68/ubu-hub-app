@@ -1,16 +1,12 @@
-const CACHE_NAME = 'ubu-hub-cache-v2';
-
+const CACHE_NAME = 'ubu-hub-cache-v6'; // **เราเปลี่ยนเลขเป็น v6 แล้ว**
 
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
-  'https://cdn.tailwindcss.com',
-  'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap'
+  '.',
+  'index.html',
+  'manifest.json',
+  'icon-192x192.png',
+  'icon-512x512.png'
 ];
-
 
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
@@ -28,10 +24,11 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('install', event => {
+  self.skipWaiting(); // บังคับให้ Service Worker ใหม่ทำงานทันที
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('Opened cache v6');
         return cache.addAll(urlsToCache);
       })
   );
@@ -41,12 +38,8 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      }
-    )
+        return response || fetch(event.request);
+      })
   );
 });
 
