@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ubu-hub-cache-v6'; // **เราเปลี่ยนเลขเป็น v6 แล้ว**
+const CACHE_NAME = 'ubu-hub-cache-v7'; // **เราเปลี่ยนเลขเป็น v7 แล้ว**
 
 const urlsToCache = [
   '.',
@@ -28,7 +28,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache v6');
+        console.log('Opened cache v7');
         return cache.addAll(urlsToCache);
       })
   );
