@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UBU Hub - Stable Version</title>
+    <title>UBU Hub - Minimalist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Sarabun', sans-serif; }
+        body { font-family: 'Sarabun', sans-serif; -webkit-tap-highlight-color: transparent; }
         .app-container { scrollbar-width: none; -ms-overflow-style: none; }
         .app-container::-webkit-scrollbar { display: none; }
         .page-content { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes animated-gradient {
@@ -23,22 +23,28 @@
         }
         .has-animated-bg::before {
             content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1;
-            background: linear-gradient(270deg, #eef2ff, #e0e7ff, #c7d2fe);
-            background-size: 400% 400%; animation: animated-gradient 18s ease infinite;
+            background: linear-gradient(270deg, #f9fafb, #f3f4f6, #e5e7eb);
+            background-size: 400% 400%; animation: animated-gradient 25s ease infinite;
         }
-        .dark .has-animated-bg::before { background: linear-gradient(270deg, #1e293b, #334155, #111827); }
+        .dark .has-animated-bg::before { background: linear-gradient(270deg, #111827, #1f2937, #111827); }
         .dark .bg-white { background-color: #1f2937; }
         .dark .bg-gray-50 { background-color: #111827; }
-        .dark .bg-white\/80 { background-color: rgba(31, 41, 55, 0.8); }
-        .dark .text-gray-800 { color: #f9fafb; }
+        .dark .bg-white\/80 { background-color: rgba(31, 41, 55, 0.7); }
+        .dark .text-gray-900 { color: #f9fafb; }
+        .dark .text-gray-800 { color: #f3f4f6; }
         .dark .text-gray-700 { color: #d1d5db; }
         .dark .text-gray-600 { color: #9ca3af; }
-        .dark .text-gray-900 { color: #f9fafb; }
+        .dark .text-gray-500 { color: #6b7280; }
         .dark .border-b, .dark .border-t, .dark .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
-        .dark .shadow-md { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.4); }
+        .dark .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3); }
         .dark input { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
-        .dark .filter-button-active { background-color: #4f46e5; color: white; }
-        .dark .bg-gray-100 { background-color: #374151;}
+        .filter-button {
+            padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;
+            transition: all 0.2s; color: #4b5563; background-color: transparent;
+        }
+        .dark .filter-button { color: #9ca3af; }
+        .filter-button-active { color: #4f46e5; font-weight: 700; }
+        .dark .filter-button-active { color: #a5b4fc; }
     </style>
 </head>
 <body class="bg-gray-200 flex items-center justify-center min-h-screen p-4">
@@ -76,11 +82,8 @@
     <script>
         // --- Dark Mode Logic ---
         function applyDarkMode() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
+            if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
         }
         function toggleDarkMode() {
             document.documentElement.classList.toggle('dark');
@@ -93,27 +96,27 @@
             home: `
                 <div class="page-content p-4 space-y-6">
                     <h2 class="text-2xl font-bold text-gray-800">Hello, Somchai!</h2>
-                    <div class="relative"><input id="search-input" type="text" placeholder="Search news..." class="w-full pl-4 pr-10 py-2 border rounded-lg"></div>
+                    <div class="relative"><input id="search-input" type="text" placeholder="Search news..." class="w-full pl-4 pr-10 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"></div>
                     <div class="flex space-x-2"><button data-filter="all" class="filter-button filter-button-active">All</button><button data-filter="scholarship" class="filter-button">Scholarship</button><button data-filter="activity" class="filter-button">Activity</button></div>
-                    <div id="news-feed" class="space-y-4"></div>
+                    <div id="news-feed" class="space-y-3"></div>
                     <div id="no-results" class="text-center text-gray-500 hidden py-8">No results found.</div>
                 </div>`,
             services: `
                 <div class="page-content p-4">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Services</h2>
-                    <p>Student services will be listed here.</p>
+                    <p class="text-gray-600">This is a placeholder for student services.</p>
                 </div>`,
             notifications: `
                 <div class="page-content p-4">
-                    <div class="flex justify-between items-center"><h2 class="text-2xl font-bold text-gray-800">Notifications</h2><button class="text-sm text-indigo-600" onclick="markAllRead()">Mark all as read</button></div>
-                    <div id="notification-list" class="space-y-3 mt-4"></div>
+                    <div class="flex justify-between items-center"><h2 class="text-2xl font-bold text-gray-800">Notifications</h2><button class="text-sm text-indigo-600 font-medium" onclick="markAllRead()">Mark all as read</button></div>
+                    <div id="notification-list" class="space-y-2 mt-4"></div>
                 </div>`,
             settings: `
                 <div class="page-content p-4">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Settings</h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md divide-y dark:divide-gray-700">
-                        <a href="javascript:void(0);" onclick="navigateTo('editProfile')" class="p-4 flex justify-between items-center"><span class="text-gray-800">Edit Profile</span><span>&gt;</span></a>
-                        <label class="p-4 flex justify-between items-center cursor-pointer"><span class="text-gray-800">Dark Mode</span><input type="checkbox" onchange="toggleDarkMode()" id="dark-mode-toggle" ${localStorage.getItem('theme') === 'dark' ? 'checked' : ''}></label>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm divide-y dark:divide-gray-700">
+                        <a href="javascript:void(0);" onclick="navigateTo('editProfile')" class="p-5 flex justify-between items-center"><span class="text-gray-800">Edit Profile</span><span class="text-gray-400">&gt;</span></a>
+                        <label class="p-5 flex justify-between items-center cursor-pointer"><span class="text-gray-800">Dark Mode</span><input type="checkbox" onchange="toggleDarkMode()" id="dark-mode-toggle" class="h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"></label>
                     </div>
                 </div>`,
             editProfile: `
@@ -123,18 +126,19 @@
                         <div><label class="text-sm font-medium text-gray-700">Full Name</label><input type="text" value="Somchai Jaidee" class="mt-1 block w-full px-3 py-2 border rounded-md"></div>
                         <button onclick="goBack()" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg">Save</button>
                     </div>
-                </div>`
+                </div>`,
+            details: `<div class="page-content p-4" id="details-content"></div>`
         };
 
         const newsData = [
-            { id: 1, title: 'Scholarship Announcement', desc: 'The Division of Student Affairs is now accepting applications...', tags: ['scholarship'] },
-            { id: 2, title: 'UBU Games 2025', desc: 'Join the annual sports competition starting next month.', tags: ['activity'] }
+            { id: 1, title: 'Scholarship Announcement', short_desc: 'The Division of Student Affairs is now accepting applications...', full_content: 'The Division of Student Affairs is now accepting applications for the annual scholarship program for the year 2025. Interested students from all faculties must submit their applications and required documents by October 31, 2025.', tags: ['scholarship'] },
+            { id: 2, title: 'UBU Games 2025', short_desc: 'Join the annual sports competition starting next month.', full_content: 'Join the annual sports competition starting next month. All students are welcome to participate in various sports. Registration is open until the end of this month.', tags: ['activity'] }
         ];
 
-        const notificationsData = [
-            { id: 1, title: 'Library will be closed', read: false },
-            { id: 2, title: 'New materials for SC101', read: false },
-            { id: 3, title: 'Welcome to UBU Hub!', read: true }
+        let notificationsData = [
+            { id: 1, title: 'Library Announcement', time: '1 hour ago', read: false, content: 'The main library will be closed early on October 10th at 16:00 for system maintenance.' },
+            { id: 2, title: 'Course Update', time: '1 day ago', read: false, content: 'New materials for course SC101 have been uploaded.' },
+            { id: 3, title: 'Welcome to UBU Hub!', time: '3 days ago', read: true, content: 'Welcome to your new central hub for all university information.' }
         ];
 
         // --- Core Navigation & Rendering ---
@@ -146,10 +150,9 @@
             const pageName = pageStack[pageStack.length - 1];
             mainContent.innerHTML = pageContents[pageName] || `<div class="p-4"><h2 class="text-2xl font-bold">Page Not Found</h2></div>`;
             
-            // Run page-specific logic after rendering
-            if (pageName === 'home') renderHomePage();
+            if (pageName === 'home') initializeHomePage();
             if (pageName === 'notifications') renderNotificationsPage();
-            if (pageName === 'settings') { // Re-attach dark mode toggle logic
+            if (pageName === 'settings') {
                  document.getElementById('dark-mode-toggle').checked = document.documentElement.classList.contains('dark');
             }
 
@@ -179,10 +182,12 @@
             navItems.forEach(item => {
                 const span = item.querySelector('span');
                 if (item.id === `nav-${currentMainPage}`) {
-                    item.classList.add('text-indigo-600', 'font-bold');
+                    item.classList.add('text-indigo-600');
                     item.classList.remove('text-gray-500');
+                    span.classList.add('font-bold');
                 } else {
-                    item.classList.remove('text-indigo-600', 'font-bold');
+                    item.classList.remove('text-indigo-600');
+                    span.classList.remove('font-bold');
                     item.classList.add('text-gray-500');
                 }
             });
@@ -192,9 +197,22 @@
             document.getElementById('back-button').classList.toggle('hidden', pageStack.length <= 1);
             document.getElementById('header-title').classList.toggle('hidden', pageStack.length > 1);
         }
+        
+        // --- Page Specific Logic ---
+        function showDetails(detailsObj) {
+            navigateTo('details');
+            setTimeout(() => {
+                const detailsContent = document.getElementById('details-content');
+                if (detailsContent) {
+                    detailsContent.innerHTML = `
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">${detailsObj.title}</h2>
+                        <p class="text-gray-700">${detailsObj.content}</p>
+                    `;
+                }
+            }, 0);
+        }
 
-        // --- Page Specific Renderers & Logic ---
-        function renderHomePage() {
+        function initializeHomePage() {
             const feed = document.getElementById('news-feed');
             const searchInput = document.getElementById('search-input');
             const filterButtons = document.querySelectorAll('.filter-button');
@@ -203,15 +221,19 @@
             function displayNews(filter = 'all', search = '') {
                 const filteredNews = newsData.filter(item => 
                     (filter === 'all' || item.tags.includes(filter)) &&
-                    (item.title.toLowerCase().includes(search) || item.desc.toLowerCase().includes(search))
+                    (item.title.toLowerCase().includes(search) || item.short_desc.toLowerCase().includes(search))
                 );
 
                 if (filteredNews.length > 0) {
-                    feed.innerHTML = filteredNews.map(item => `
-                        <a href="javascript:void(0);" class="news-item block bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md">
-                            <h4 class="font-bold text-gray-900">${item.title}</h4>
-                            <p class="text-sm text-gray-600 mt-1">${item.desc}</p>
-                        </a>`).join('');
+                    feed.innerHTML = filteredNews.map(item => {
+                        const itemData = { title: item.title, content: item.full_content };
+                        return `
+                        <a href="javascript:void(0);" onclick='showDetails(${JSON.stringify(itemData)})' 
+                           class="news-item block bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                            <h4 class="font-semibold text-gray-900">${item.title}</h4>
+                            <p class="text-sm text-gray-600 mt-1">${item.short_desc}</p>
+                        </a>`;
+                    }).join('');
                     noResults.classList.add('hidden');
                 } else {
                     feed.innerHTML = '';
@@ -232,15 +254,31 @@
                 displayNews(activeFilter, searchInput.value.toLowerCase());
             });
 
-            displayNews(); // Initial display
+            displayNews();
         }
         
         function renderNotificationsPage() {
             const list = document.getElementById('notification-list');
+            if (!list) return; // Add a guard clause
             list.innerHTML = notificationsData.map(n => `
-                <div class="notification-item p-3 rounded-lg ${n.read ? 'bg-gray-100 dark:bg-gray-700' : 'bg-white dark:bg-gray-800 shadow-sm'}">
-                    <p class="font-semibold ${n.read ? 'text-gray-500' : 'text-gray-800'}">${n.title}</p>
-                </div>`).join('');
+                <a href="javascript:void(0);" onclick="handleNotificationClick(${n.id})"
+                   class="notification-item block p-4 rounded-lg ${n.read ? 'bg-transparent' : 'bg-white dark:bg-gray-800 shadow-sm'}">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${n.read ? 'bg-gray-300 dark:bg-gray-600' : 'bg-blue-500'}"></div>
+                        <div>
+                            <p class="font-semibold ${n.read ? 'text-gray-500' : 'text-gray-800'}">${n.title}</p>
+                            <p class="text-xs text-gray-400 mt-1">${n.time}</p>
+                        </div>
+                    </div>
+                </a>`).join('');
+        }
+
+        function handleNotificationClick(notificationId) {
+            const notification = notificationsData.find(n => n.id === notificationId);
+            if (notification) {
+                notification.read = true;
+                showDetails({ title: notification.title, content: notification.content });
+            }
         }
 
         function markAllRead() {
