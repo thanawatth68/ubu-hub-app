@@ -1,6 +1,6 @@
-const CACHE_NAME = 'ubu-hub-cache-v2'; // เปลี่ยนชื่อ Cache เพื่อบังคับให้อัปเดต
+const CACHE_NAME = 'ubu-hub-cache-v2';
 
-// เพิ่มไฟล์ manifest และ icon เข้าไปในรายการที่จะ "จำ"
+
 const urlsToCache = [
   '/',
   '/index.html',
@@ -11,7 +11,7 @@ const urlsToCache = [
   'https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap'
 ];
 
-// ลบ Cache เก่าทิ้งเมื่อมีการอัปเดต
+
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
