@@ -38,8 +38,11 @@
         .dark .has-animated-bg::before { background: linear-gradient(270deg, #1e293b, #334155, #111827); }
         .app-container { position: relative; z-index: 1; background: transparent; }
         .dark .bg-white { background-color: #1f2937; }
+        .dark .bg-gray-50 { background-color: #111827; }
+        .dark .bg-gray-100 { background-color: #374151; }
         .dark .bg-white\/80 { background-color: rgba(31, 41, 55, 0.8); }
         .dark .text-gray-800 { color: #f9fafb; }
+        .dark .text-gray-700 { color: #d1d5db; }
         .dark .text-gray-600 { color: #9ca3af; }
         .dark .text-gray-900 { color: #f9fafb; }
         .dark .text-gray-500 { color: #6b7280; }
@@ -49,6 +52,10 @@
         .dark .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
         .dark input, .dark select { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
         .dark .filter-button-active { background-color: #4f46e5; color: white; }
+        .dark .calendar-day { background-color: #374151; border-color: #4b5563; }
+        .dark .calendar-day-today { background-color: #4f46e5; color: white; }
+        .dark .calendar-day-event { border-color: #a5b4fc; }
+        .dark .faq-answer { background-color: #374151; }
     </style>
 </head>
 <body class="bg-gray-200 flex items-center justify-center min-h-screen p-4">
@@ -62,7 +69,7 @@
                     <div id="header-title"><h1 class="text-xl font-bold text-indigo-700">UBU HUB</h1><p class="text-xs text-gray-500">A central hub for UBU students</p></div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button class="relative text-gray-600" onclick="navigateTo('notifications')"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg><span class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span></button>
+                    <button id="notification-bell" class="relative text-gray-600" onclick="navigateTo('notifications')"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg><span id="notification-dot" class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span></button>
                     <img src="https://placehold.co/40x40/EFEFEF/333333?text=S" class="w-9 h-9 rounded-full cursor-pointer" alt="User Profile" onclick="navigateTo('settings')">
                 </div>
             </header>
@@ -75,14 +82,18 @@
                 <main id="page-settings" class="page-content p-4 space-y-6 hidden"></main>
                 <!-- Sub Pages -->
                 <main id="page-details" class="page-content p-4 space-y-4 hidden"></main>
-                <main id="page-interests" class="page-content p-4 space-y-4 hidden"></main>
                 <main id="page-edit-profile" class="page-content p-4 space-y-4 hidden"></main>
-                <main id="page-calendar" class="page-content p-4 space-y-6 hidden"></main>
+                <main id="page-calendar" class="page-content p-4 space-y-4 hidden"></main>
+                <main id="page-my-schedule" class="page-content p-4 space-y-4 hidden"></main>
                 <main id="page-campus-map" class="page-content p-4 space-y-4 hidden"></main>
                 <main id="page-contacts" class="page-content p-4 space-y-4 hidden"></main>
                 <main id="page-language" class="page-content p-4 space-y-4 hidden"></main>
                 <main id="page-help" class="page-content p-4 space-y-4 hidden"></main>
                 <main id="page-about" class="page-content p-4 space-y-4 hidden"></main>
+                 <!-- Quick Link Sub Pages -->
+                <main id="page-registration" class="page-content p-4 space-y-4 hidden"></main>
+                <main id="page-elearning" class="page-content p-4 space-y-4 hidden"></main>
+                <main id="page-library" class="page-content p-4 space-y-4 hidden"></main>
             </div>
             <div class="h-20"></div> 
         </div>
@@ -114,49 +125,55 @@
         }
         applyDarkMode();
 
-        // --- Navigation and Page Content ---
+        // --- Page Content Definitions ---
         let pageStack = [];
         const pageContents = {
             home: `
-                <div><h2 class="text-2xl font-bold text-gray-800">Hello, Somchai</h2><p class="text-gray-600">Here's your curated news and information.</p></div>
-                <div class="relative"><input id="search-input" type="text" placeholder="Search news..." class="w-full px-4 py-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"><svg class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" /></svg></div>
-                <div class="flex space-x-2 overflow-x-auto pb-2 -mx-4 px-4"><button class="filter-button filter-button-active flex-shrink-0 bg-indigo-100 text-indigo-800 text-sm font-semibold px-4 py-2 rounded-full" data-filter="all">All</button><button class="filter-button flex-shrink-0 bg-gray-100 dark:bg-gray-700 text-gray-800 text-sm font-semibold px-4 py-2 rounded-full" data-filter="scholarship">Scholarship</button><button class="filter-button flex-shrink-0 bg-gray-100 dark:bg-gray-700 text-gray-800 text-sm font-semibold px-4 py-2 rounded-full" data-filter="activity">Activity</button><button class="filter-button flex-shrink-0 bg-gray-100 dark:bg-gray-700 text-gray-800 text-sm font-semibold px-4 py-2 rounded-full" data-filter="science">Science</button></div>
+                <div><h2 class="text-2xl font-bold text-gray-800">Hello, Somchai</h2><p class="text-gray-600">Here's your curated information.</p></div>
+                <div class="relative"><input id="search-input" type="text" placeholder="Search news..." class="w-full px-4 py-3 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
+                <div class="flex space-x-2 overflow-x-auto pb-2 -mx-4 px-4">
+                    <button class="filter-button filter-button-active flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-full" data-filter="all">All</button>
+                    <button class="filter-button flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-full" data-filter="scholarship">Scholarship</button>
+                    <button class="filter-button flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-full" data-filter="activity">Activity</button>
+                    <button class="filter-button flex-shrink-0 text-sm font-semibold px-4 py-2 rounded-full" data-filter="science">Science</button>
+                </div>
                 <section id="news-feed" class="space-y-4">
-                    <a href="javascript:void(0);" onclick="showDetails('Scholarship Announcement', '...details...')" class="news-item block bg-white p-4 rounded-xl shadow-md border-l-4 border-green-500 hover:shadow-lg transition-shadow" data-tags="scholarship"><h4 class="font-bold text-gray-900">Scholarship Announcement</h4><p class="text-sm text-gray-600 mt-1">...details...</p></a>
-                    <a href="javascript:void(0);" onclick="showDetails('Computer Proficiency Test', '...details...')" class="news-item block bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 hover:shadow-lg transition-shadow" data-tags="science 3rdyear"><h4 class="font-bold text-gray-900">Computer Proficiency Test</h4><p class="text-sm text-gray-600 mt-1">...details...</p></a>
+                    <a href="javascript:void(0);" onclick="showDetails({img: 'https://placehold.co/600x400/10b981/ffffff?text=Scholarship', title: 'Scholarship Announcement', content: 'The Division of Student Affairs is now accepting applications for the annual scholarship program for the year 2025. Interested students from all faculties must submit their applications and required documents by October 31, 2025. Please see the full criteria and download the application form from the university website under the student affairs section.', tags: ['Scholarship', 'All Years']})" class="news-item block bg-white p-4 rounded-xl shadow-md border-l-4 border-green-500 hover:shadow-lg transition-shadow" data-tags="scholarship"><h4 class="font-bold text-gray-900">Scholarship Announcement</h4><p class="text-sm text-gray-600 mt-1 truncate">The Division of Student Affairs is now accepting applications...</p></a>
+                    <a href="javascript:void(0);" onclick="showDetails({img: 'https://placehold.co/600x400/3b82f6/ffffff?text=Test', title: 'Computer Proficiency Test', content: 'For 3rd-year students in the Faculty of Science who have not yet met the computer proficiency requirements, the final test will be held on November 15, 2025, at the main computer lab. Please register through the faculty\\'s online portal before November 10.', tags: ['Science', '3rd Year']})" class="news-item block bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 hover:shadow-lg transition-shadow" data-tags="science 3rdyear"><h4 class="font-bold text-gray-900">Computer Proficiency Test</h4><p class="text-sm text-gray-600 mt-1 truncate">For 3rd-year students in the Faculty of Science...</p></a>
                     <div id="no-results" class="hidden text-center py-10"><p class="text-gray-500">No matching news found.</p></div>
                 </section>
                 <div>
                     <h3 class="text-lg font-bold text-gray-800 mb-3">Quick Links</h3>
                     <div class="grid grid-cols-3 gap-4 text-center">
-                        <a href="#" class="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow"><span class="text-2xl">🎓</span><p class="text-xs font-semibold mt-1">Registration</p></a>
-                        <a href="#" class="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow"><span class="text-2xl">📚</span><p class="text-xs font-semibold mt-1">E-Learning</p></a>
-                        <a href="#" class="block bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-shadow"><span class="text-2xl">📖</span><p class="text-xs font-semibold mt-1">Library</p></a>
+                        <a href="javascript:void(0);" onclick="navigateTo('registration')" class="block bg-white p-3 rounded-xl shadow-md hover:shadow-lg transition-shadow"><span class="text-2xl">🎓</span><p class="text-xs font-semibold mt-1">Registration</p></a>
+                        <a href="javascript:void(0);" onclick="navigateTo('elearning')" class="block bg-white p-3 rounded-xl shadow-md hover:shadow-lg transition-shadow"><span class="text-2xl">📚</span><p class="text-xs font-semibold mt-1">E-Learning</p></a>
+                        <a href="javascript:void(0);" onclick="navigateTo('library')" class="block bg-white p-3 rounded-xl shadow-md hover:shadow-lg transition-shadow"><span class="text-2xl">📖</span><p class="text-xs font-semibold mt-1">Library</p></a>
                     </div>
                 </div>`,
             services: `
                 <h2 class="text-2xl font-bold text-gray-800">Student Services</h2>
                 <div class="bg-white rounded-xl shadow-md divide-y">
+                    <a href="javascript:void(0);" onclick="navigateTo('my-schedule')" class="p-4 flex justify-between items-center w-full text-left"><span class="font-semibold text-gray-800">📅 My Schedule</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
                     <a href="javascript:void(0);" onclick="navigateTo('calendar')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Academic Calendar</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
                     <a href="javascript:void(0);" onclick="navigateTo('campus-map')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Campus Map</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
                     <a href="javascript:void(0);" onclick="navigateTo('contacts')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Important Contacts</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
                 </div>`,
             notifications: `
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-bold text-gray-800">Notifications</h2>
-                    <button onclick="markAllAsRead()" class="text-sm text-indigo-600 font-semibold">Mark all as read</button>
-                </div>
+                <div class="flex justify-between items-center"><h2 class="text-2xl font-bold text-gray-800">Notifications</h2><button onclick="markAllAsRead()" class="text-sm text-indigo-600 font-semibold">Mark all as read</button></div>
                 <div id="notification-list" class="space-y-3">
-                    <div class="notification-item unread bg-white p-4 rounded-xl shadow-md flex items-start space-x-3"><div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div><div><p class="text-sm text-gray-800">The library will close early on Oct 10th at 16:00.</p><p class="text-xs text-gray-400 mt-1">1 hour ago</p></div></div>
-                    <div class="notification-item unread bg-white p-4 rounded-xl shadow-md flex items-start space-x-3"><div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div><div><p class="text-sm text-gray-800">Course materials for SC101 have been uploaded.</p><p class="text-xs text-gray-400 mt-1">1 day ago</p></div></div>
-                    <div class="notification-item read bg-white/50 dark:bg-gray-800/50 p-4 rounded-xl flex items-start space-x-3"><div class="w-2 h-2 bg-transparent rounded-full mt-2"></div><div><p class="text-sm text-gray-500">Welcome to UBU Hub!</p><p class="text-xs text-gray-400 mt-1">3 days ago</p></div></div>
+                    <div class="notification-item unread flex items-start space-x-3 bg-white p-3 rounded-lg shadow-sm cursor-pointer" onclick="showDetails({title: 'Library Announcement', content: 'The main library will close early on October 10th at 16:00 for system maintenance.'})"><div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div><div><p class="text-sm font-bold text-gray-800">Library Announcement</p><p class="text-xs text-gray-500 mt-1">1 hour ago</p></div></div>
+                    <div class="notification-item unread flex items-start space-x-3 bg-white p-3 rounded-lg shadow-sm cursor-pointer" onclick="showDetails({title: 'Course Update', content: 'New materials for course SC101 have been uploaded to the E-Learning portal.'})"><div class="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div><div><p class="text-sm font-bold text-gray-800">Course Update</p><p class="text-xs text-gray-500 mt-1">1 day ago</p></div></div>
+                    <div class="notification-item read flex items-start space-x-3 bg-gray-50 p-3 rounded-lg"><div class="w-2 h-2 bg-transparent rounded-full mt-2 flex-shrink-0"></div><div><p class="text-sm font-semibold text-gray-500">Welcome to UBU Hub!</p><p class="text-xs text-gray-400 mt-1">3 days ago</p></div></div>
                 </div>`,
             settings: `
-                <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
+                <h2 class="text-2xl font-bold text-gray-800">Settings & Profile</h2>
+                 <div class="flex items-center space-x-4 bg-white p-4 rounded-xl shadow-md">
+                    <img src="https://placehold.co/64x64/EFEFEF/333333?text=S" class="w-16 h-16 rounded-full" alt="User Profile">
+                    <div><h3 class="font-bold text-lg text-gray-900">Somchai Jaidee</h3><p class="text-sm text-gray-500">Faculty of Science</p></div>
+                </div>
                 <div class="bg-white rounded-xl shadow-md divide-y">
                     <a href="javascript:void(0);" onclick="navigateTo('edit-profile')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Edit Profile</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
-                    <a href="javascript:void(0);" onclick="navigateTo('interests')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Manage Interests</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
-                    <label for="dark-mode-toggle-settings" class="p-4 flex justify-between items-center w-full cursor-pointer"><span class="text-gray-800">Dark Mode</span><div class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="dark-mode-toggle-settings" class="sr-only peer" onchange="toggleDarkMode()" ${document.documentElement.classList.contains('dark') ? 'checked' : ''}><div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div></div></label>
+                    <label class="p-4 flex justify-between items-center w-full cursor-pointer"><span class="text-gray-800">Dark Mode</span><div class="relative inline-flex items-center cursor-pointer"><input type="checkbox" onchange="toggleDarkMode()" id="dark-mode-toggle" class="sr-only peer"><div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div></div></label>
                 </div>
                 <div class="bg-white rounded-xl shadow-md divide-y mt-6">
                     <a href="javascript:void(0);" onclick="navigateTo('language')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Language</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
@@ -164,52 +181,63 @@
                     <a href="javascript:void(0);" onclick="navigateTo('about')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">About this App</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
                 </div>
                  <div class="mt-6"><a href="javascript:void(0);" onclick="showLogoutModal()" class="block w-full text-center p-4 bg-white rounded-xl shadow-md text-red-600 font-semibold">Log Out</a></div>`,
-            calendar: `<h2 class="text-2xl font-bold text-gray-800">Academic Calendar</h2><div class="bg-white p-4 rounded-xl shadow-md space-y-4"><div class="flex items-center space-x-3"><div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Oct</span><span class="text-xl">15</span></div><div><h4 class="font-semibold text-gray-800">Midterm Exam</h4><p class="text-sm text-gray-500">Faculty of Science</p></div></div></div>`,
-            'campus-map': `<h2 class="text-2xl font-bold text-gray-800">Campus Map</h2><div class="bg-white rounded-xl shadow-md p-2"><img src="https://placehold.co/600x800/e0e7ff/3730a3?text=Campus+Map+Placeholder" class="rounded-lg" alt="Campus Map"></div>`,
-            contacts: `<h2 class="text-2xl font-bold text-gray-800">Important Contacts</h2><div class="bg-white rounded-xl shadow-md divide-y"><div class="p-3"><h4 class="font-semibold">Faculty of Science</h4><p class="text-sm text-gray-600">Tel: 045-xxx-xxxx</p></div><div class="p-3"><h4 class="font-semibold">Student Affairs</h4><p class="text-sm text-gray-600">Tel: 045-xxx-xxxx</p></div></div>`,
-            language: `<h2 class="text-2xl font-bold text-gray-800">Language</h2><div class="bg-white rounded-xl shadow-md divide-y"><a href="#" class="p-4 flex justify-between items-center text-indigo-600 font-bold"><span>English</span><span>✓</span></a><a href="#" class="p-4 flex justify-between items-center text-gray-500"><span>ภาษาไทย</span></a></div>`,
-            help: `<h2 class="text-2xl font-bold text-gray-800">Help & Support</h2><div class="bg-white rounded-xl shadow-md p-4"><p class="text-gray-600">For technical issues, please contact IT Support at support@ubu.ac.th or call 045-xxx-xxxx.</p></div>`,
-            about: `<h2 class="text-2xl font-bold text-gray-800">About UBU Hub</h2><div class="bg-white rounded-xl shadow-md p-4 space-y-2"><p class="text-gray-600">Version: 1.0.0</p><p class="text-gray-600">UBU Hub is a central platform for students of Ubon Ratchathani University.</p></div>`,
+            'edit-profile': `
+                <h2 class="text-2xl font-bold text-gray-800">Edit Profile</h2>
+                <div class="space-y-4">
+                    <div><label class="text-sm font-medium text-gray-700">Full Name</label><input type="text" value="Somchai Jaidee" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></div>
+                    <div><label class="text-sm font-medium text-gray-700">Faculty</label><input type="text" value="Faculty of Science" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></div>
+                    <div><label class="text-sm font-medium text-gray-700">Year of Study</label><input type="number" value="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></div>
+                    <button onclick="goBack()" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors">Save Changes</button>
+                </div>`,
+            calendar: `<div id="calendar-container" class="bg-white rounded-xl shadow-md p-4"></div>`,
+            'my-schedule': `
+                <h2 class="text-2xl font-bold text-gray-800">My Schedule</h2>
+                <p class="text-gray-600">Semester 2/2025</p>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-2">Monday</h3>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded-lg shadow-sm border-l-4 border-blue-400"><p class="font-semibold text-gray-800">SC101 - General Chemistry</p><p class="text-sm text-gray-600">09:00 - 10:30 | Room: SCB2102</p></div>
+                            <div class="bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-400"><p class="font-semibold text-gray-800">MA221 - Calculus II</p><p class="text-sm text-gray-600">13:00 - 14:30 | Room: SCB3105</p></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-2">Tuesday</h3>
+                        <div class="space-y-2">
+                             <div class="bg-gray-100 p-3 rounded-lg text-center"><p class="text-sm text-gray-500">No classes today</p></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 mb-2">Wednesday</h3>
+                        <div class="space-y-2">
+                             <div class="bg-white p-3 rounded-lg shadow-sm border-l-4 border-purple-400"><p class="font-semibold text-gray-800">CS305 - Data Structures</p><p class="text-sm text-gray-600">10:30 - 12:00 | Room: IT404</p></div>
+                        </div>
+                    </div>
+                </div>`,
+            'campus-map': `<h2 class="text-2xl font-bold text-gray-800">Campus Map</h2><div class="bg-white rounded-xl shadow-md p-2"><img src="https://placehold.co/600x800/e0e7ff/3730a3?text=Campus+Map+Placeholder" class="rounded-lg w-full" alt="Campus Map"></div>`,
+            contacts: `<h2 class="text-2xl font-bold text-gray-800">Important Contacts</h2><div class="relative mb-4"><input id="contact-search" type="text" placeholder="Search contacts..." class="w-full px-4 py-2 pr-10 rounded-lg border dark:border-gray-600"></div><div id="contact-list" class="bg-white rounded-xl shadow-md divide-y"></div>`,
+            language: `<h2 class="text-2xl font-bold text-gray-800">Language</h2><div id="language-options" class="bg-white rounded-xl shadow-md divide-y"><a href="javascript:void(0);" onclick="selectLanguage('en')" class="lang-option p-4 flex justify-between items-center text-indigo-600 font-bold" data-lang="en"><span>English</span><span class="check-mark">✓</span></a><a href="javascript:void(0);" onclick="selectLanguage('th')" class="lang-option p-4 flex justify-between items-center text-gray-500" data-lang="th"><span>ภาษาไทย</span><span class="check-mark hidden">✓</span></a></div>`,
+            help: `
+                <h2 class="text-2xl font-bold text-gray-800">Help & Support (FAQ)</h2>
+                <div id="faq-container" class="space-y-2">
+                    <div class="faq-item bg-white rounded-lg shadow-sm"><button class="faq-question w-full text-left font-semibold p-4 flex justify-between items-center"><span>How do I change my password?</span><svg class="w-5 h-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="faq-answer hidden p-4 border-t"><p>You can change your password through the university's central IT services website.</p></div></div>
+                    <div class="faq-item bg-white rounded-lg shadow-sm"><button class="faq-question w-full text-left font-semibold p-4 flex justify-between items-center"><span>Where can I see my grades?</span><svg class="w-5 h-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="faq-answer hidden p-4 border-t"><p>Your grades are available on the registration system, accessible via the Quick Links on the home page.</p></div></div>
+                </div>`,
+            about: `<h2 class="text-2xl font-bold text-gray-800">About UBU Hub</h2><div class="bg-white rounded-xl shadow-md p-4 space-y-2"><p><strong>Version:</strong> 1.2.0</p><p>UBU Hub is a central platform for students of Ubon Ratchathani University, designed to unify information and enhance the student experience.</p><div class="border-t pt-2 mt-2"><a href="#" class="text-indigo-600">Privacy Policy</a><span class="mx-2 text-gray-400">|</span><a href="#" class="text-indigo-600">Terms of Service</a></div></div>`,
+            details: `<div id="details-container" class="bg-white rounded-xl shadow-lg overflow-hidden"></div>`,
+            registration: `<h2 class="text-2xl font-bold text-gray-800">Registration System</h2><div class="bg-white rounded-xl shadow-md p-4"><p>This is the placeholder page for the student registration system.</p></div>`,
+            elearning: `<h2 class="text-2xl font-bold text-gray-800">E-Learning Portal</h2><div class="bg-white rounded-xl shadow-md p-4"><p>This is the placeholder page for the E-Learning portal.</p></div>`,
+            library: `<h2 class="text-2xl font-bold text-gray-800">Library Services</h2><div class="bg-white rounded-xl shadow-md p-4"><p>This is the placeholder page for the university library services.</p></div>`
         };
         
-        function initializeSearchAndFilter() { /* ... existing code ... */ }
-
-        function markAllAsRead() {
-            const unreadItems = document.querySelectorAll('.notification-item.unread');
-            unreadItems.forEach(item => {
-                item.classList.remove('unread');
-                item.classList.add('read');
-                item.querySelector('.w-2.h-2').classList.add('bg-transparent');
-                item.querySelector('.w-2.h-2').classList.remove('bg-blue-500');
-                item.classList.add('bg-white/50', 'dark:bg-gray-800/50');
-                item.querySelector('p:first-child').classList.add('text-gray-500');
-                item.querySelector('p:first-child').classList.remove('text-gray-800');
-            });
-        }
-        
-        function updateNavHighlight(pageName) {
-            const mainPages = ['home', 'services', 'notifications', 'settings'];
-            let basePage = pageStack.find(p => mainPages.includes(p)) || 'home';
-
-            mainPages.forEach(p => {
-                const link = document.getElementById(`nav-${p}`);
-                if (!link) return;
-                const span = link.querySelector('span');
-                if (p === basePage) {
-                    link.classList.remove('text-gray-500'); link.classList.add('text-indigo-600'); span.classList.add('font-bold');
-                } else {
-                    link.classList.remove('text-indigo-600'); link.classList.add('text-gray-500'); span.classList.remove('font-bold');
-                }
-            });
-        }
-        
+        // --- Core Functions ---
         function renderPage(pageName) {
             const allPages = document.querySelectorAll('.page-content');
             allPages.forEach(p => p.classList.add('hidden'));
             const targetPage = document.getElementById(`page-${pageName}`);
             
             if (targetPage) {
-                if (pageContents[pageName] && (targetPage.innerHTML.trim() === '' || pageName === 'settings' || pageName === 'home' || pageName === 'services' || pageName === 'notifications')) {
+                if (pageContents[pageName] && (targetPage.innerHTML.trim() === '' || !['details'].includes(pageName) )) {
                      targetPage.innerHTML = pageContents[pageName];
                 }
                 targetPage.classList.remove('hidden');
@@ -221,18 +249,26 @@
             document.getElementById('bottom-nav').classList.toggle('hidden', isSubPage);
             updateNavHighlight(pageName);
             document.querySelector('.app-container').scrollTop = 0;
-            if (pageName === 'home') {
-                initializeSearchAndFilter();
+            
+            // Run initializers for specific pages
+            if (pageName === 'home') initializeHomePage();
+            if (pageName === 'calendar') initializeCalendarPage();
+            if (pageName === 'contacts') initializeContactsPage();
+            if (pageName === 'help') initializeHelpPage();
+            if (pageName === 'notifications') initializeNotificationsPage();
+            if (pageName === 'settings') {
+                document.getElementById('dark-mode-toggle').checked = document.documentElement.classList.contains('dark');
             }
         }
         
         function navigateTo(pageName) {
-            if (pageStack[pageStack.length - 1] !== pageName) {
-                pageStack.push(pageName);
-            }
             const mainPages = ['home', 'services', 'notifications', 'settings'];
             if (mainPages.includes(pageName)) {
                 pageStack = [pageName];
+            } else {
+                 if (pageStack[pageStack.length - 1] !== pageName) {
+                    pageStack.push(pageName);
+                }
             }
             renderPage(pageName);
         }
@@ -248,10 +284,239 @@
             }
         }
         
-        function showDetails(title, content, tags) { /* ... existing code ... */ }
-        function showLogoutModal() { /* ... existing code ... */ }
-        function hideLogoutModal() { /* ... existing code ... */ }
-        function logout() { /* ... existing code ... */ }
+        function showDetails(details) {
+            navigateTo('details');
+            setTimeout(() => {
+                const container = document.getElementById('details-container');
+                if (!container) return;
+                let tagsHTML = '';
+                if (details.tags && details.tags.length > 0) {
+                    tagsHTML = `<div class="p-4 flex flex-wrap gap-2 border-b dark:border-gray-700">${details.tags.map(tag => `<span class="text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 px-2 py-1 rounded-full">${tag}</span>`).join('')}</div>`;
+                }
+                container.innerHTML = `
+                    ${details.img ? `<img src="${details.img}" class="w-full h-48 object-cover" alt="Details image">` : ''}
+                    <div class="p-4">
+                        <h2 class="text-2xl font-bold text-gray-800">${details.title}</h2>
+                    </div>
+                    ${tagsHTML}
+                    <div class="p-4"><p class="text-gray-700 leading-relaxed">${details.content}</p></div>
+                `;
+            }, 0);
+        }
+
+        function showLogoutModal() {
+            const modal = document.getElementById('logout-modal');
+            modal.innerHTML = `<div class="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center shadow-xl max-w-xs mx-auto"><h3 class="text-lg font-bold text-gray-900">Log Out</h3><p class="text-sm text-gray-600 mt-2">Are you sure you want to log out?</p><div class="mt-6 flex justify-center space-x-4"><button onclick="hideLogoutModal()" class="px-6 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-800 font-semibold">Cancel</button><button onclick="logout()" class="px-6 py-2 rounded-lg bg-red-600 text-white font-semibold">Log Out</button></div></div>`;
+            modal.classList.remove('hidden');
+        }
+        function hideLogoutModal() { document.getElementById('logout-modal').classList.add('hidden'); }
+        function logout() {
+            hideLogoutModal();
+            pageStack = ['home'];
+            navigateTo('home');
+        }
+        
+        function updateNavHighlight(pageName) {
+            const mainPages = ['home', 'services', 'notifications', 'settings'];
+            let basePage = pageStack[0] || 'home';
+
+            mainPages.forEach(p => {
+                const link = document.getElementById(`nav-${p}`);
+                if (!link) return;
+                const span = link.querySelector('span');
+                if (p === basePage) {
+                    link.classList.remove('text-gray-500'); link.classList.add('text-indigo-600'); span.classList.add('font-bold');
+                } else {
+                    link.classList.remove('text-indigo-600'); link.classList.add('text-gray-500'); span.classList.remove('font-bold');
+                }
+            });
+        }
+        
+        // --- Feature-Specific Initializers ---
+        function initializeHomePage() {
+            const searchInput = document.getElementById('search-input');
+            const newsItems = document.querySelectorAll('.news-item');
+            const noResults = document.getElementById('no-results');
+            const filterButtons = document.querySelectorAll('.filter-button');
+            let activeFilter = 'all';
+
+            function styleFilterButtons() {
+                filterButtons.forEach(button => {
+                    if (button.dataset.filter === activeFilter) {
+                        button.classList.add('filter-button-active', 'bg-indigo-600', 'text-white');
+                        button.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800');
+                    } else {
+                        button.classList.remove('filter-button-active', 'bg-indigo-600', 'text-white');
+                        button.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-gray-800');
+                    }
+                });
+            }
+
+            function filterContent() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let hasVisibleItems = false;
+                newsItems.forEach(item => {
+                    const itemText = item.textContent.toLowerCase();
+                    const itemTags = item.dataset.tags || '';
+                    const matchesSearch = itemText.includes(searchTerm);
+                    const matchesFilter = activeFilter === 'all' || itemTags.includes(activeFilter);
+                    if (matchesSearch && matchesFilter) {
+                        item.classList.remove('hidden');
+                        hasVisibleItems = true;
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+                noResults.classList.toggle('hidden', hasVisibleItems);
+            }
+
+            searchInput.addEventListener('input', filterContent);
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    activeFilter = button.dataset.filter;
+                    styleFilterButtons();
+                    filterContent();
+                });
+            });
+            styleFilterButtons();
+        }
+
+        function initializeCalendarPage() {
+            const container = document.getElementById('calendar-container');
+            if (!container) return;
+
+            const events = { '2025-10-15': 'Midterm Exam', '2025-10-20': 'Tuition Fee Deadline' };
+            const today = new Date();
+            let currentMonth = today.getMonth();
+            let currentYear = today.getFullYear();
+
+            function renderCalendar() {
+                const firstDay = new Date(currentYear, currentMonth, 1);
+                const lastDay = new Date(currentYear, currentMonth + 1, 0);
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                
+                let calendarHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="prev-month" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">&lt;</button>
+                        <h3 class="font-bold text-lg">${monthNames[currentMonth]} ${currentYear}</h3>
+                        <button id="next-month" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">&gt;</button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500">
+                        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                    </div>
+                    <div class="grid grid-cols-7 gap-1 mt-2">`;
+                
+                for (let i = 0; i < firstDay.getDay(); i++) {
+                    calendarHTML += `<div></div>`;
+                }
+
+                for (let day = 1; day <= lastDay.getDate(); day++) {
+                    const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const isToday = day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear();
+                    const hasEvent = events[dateStr];
+                    calendarHTML += `<div class="calendar-day p-2 rounded-lg text-sm border ${isToday ? 'calendar-day-today' : ''} ${hasEvent ? 'calendar-day-event font-bold' : ''}" onclick="showDetails({title: 'Event on ${monthNames[currentMonth]} ${day}', content: '${hasEvent || 'No events today.'}'})">${day}</div>`;
+                }
+                calendarHTML += `</div>`;
+                container.innerHTML = calendarHTML;
+
+                document.getElementById('prev-month').onclick = () => {
+                    currentMonth--;
+                    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+                    renderCalendar();
+                };
+                document.getElementById('next-month').onclick = () => {
+                    currentMonth++;
+                    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                    renderCalendar();
+                };
+            }
+            renderCalendar();
+        }
+
+        function initializeContactsPage() {
+            const contactList = document.getElementById('contact-list');
+            const searchInput = document.getElementById('contact-search');
+            if (!contactList) return;
+            const contacts = [
+                { name: 'Faculty of Science', tel: '045-123-4567', email: 'sci@ubu.ac.th' },
+                { name: 'Student Affairs', tel: '045-123-4568', email: 'student.aff@ubu.ac.th' },
+                { name: 'Registration Office', tel: '045-123-4569', email: 'reg@ubu.ac.th' },
+                { name: 'Main Library', tel: '045-123-4570', email: 'library@ubu.ac.th' },
+            ];
+
+            function renderContacts(filter = '') {
+                const filteredContacts = contacts.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+                contactList.innerHTML = filteredContacts.map(c => `
+                    <div class="p-3">
+                        <h4 class="font-semibold text-gray-800">${c.name}</h4>
+                        <p class="text-sm text-gray-600">Tel: ${c.tel}</p>
+                        <p class="text-sm text-gray-600">Email: ${c.email}</p>
+                    </div>`).join('');
+            }
+            searchInput.addEventListener('input', (e) => renderContacts(e.target.value));
+            renderContacts();
+        }
+
+        function initializeHelpPage() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const icon = question.querySelector('svg');
+                question.addEventListener('click', () => {
+                    answer.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+        }
+        
+        function initializeNotificationsPage() {
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            const dot = document.getElementById('notification-dot');
+            if (dot) dot.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+
+        function markAllAsRead() {
+            const unreadItems = document.querySelectorAll('.notification-item.unread');
+            unreadItems.forEach(item => {
+                item.classList.remove('unread');
+                item.classList.add('read', 'bg-gray-50');
+                item.classList.remove('bg-white');
+                const dot = item.querySelector('.w-2.h-2');
+                if (dot) {
+                    dot.classList.add('bg-transparent');
+                    dot.classList.remove('bg-blue-500');
+                }
+                const title = item.querySelector('p:first-child');
+                if(title) {
+                    title.classList.add('font-semibold', 'text-gray-500');
+                    title.classList.remove('font-bold', 'text-gray-800');
+                }
+            });
+            initializeNotificationsPage();
+        }
+        
+        function selectLanguage(lang) {
+            const headerTitle = document.querySelector('#header-title h1');
+            document.querySelectorAll('.lang-option').forEach(opt => {
+                const checkMark = opt.querySelector('.check-mark');
+                if (opt.dataset.lang === lang) {
+                    opt.classList.add('text-indigo-600', 'font-bold');
+                    opt.classList.remove('text-gray-500');
+                    checkMark.classList.remove('hidden');
+                    // Simple demonstration of language change
+                    if (lang === 'th') {
+                        headerTitle.textContent = 'ยูบียู ฮับ';
+                    } else {
+                        headerTitle.textContent = 'UBU HUB';
+                    }
+                } else {
+                    opt.classList.remove('text-indigo-600', 'font-bold');
+                    opt.classList.add('text-gray-500');
+                    checkMark.classList.add('hidden');
+                }
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', () => { 
             pageStack.push('home');
