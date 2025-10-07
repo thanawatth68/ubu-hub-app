@@ -9,10 +9,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="UBU Hub">
-    <!-- เพิ่มขนาดไอคอนสำหรับ iPhone และ iPad ให้ครบ -->
-    <link rel="apple-touch-icon" sizes="180x180" href="icon-192x192.png"> 
-    <link rel="apple-touch-icon" sizes="192x192" href="icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512x512.png">
+    <!-- ชี้ไปที่ icon โดยตรง -->
+    <link rel="apple-touch-icon" href="icon-192x192.png"> 
     <!-- =================================================== -->
 
     <link rel="manifest" href="manifest.json">
@@ -68,7 +66,6 @@
         <div id="logout-modal" class="hidden absolute inset-0 bg-black/40 z-20 flex items-center justify-center p-4"><div class="bg-white rounded-2xl p-6 text-center shadow-xl max-w-xs mx-auto"><h3 class="text-lg font-bold text-gray-900">Log Out</h3><p class="text-sm text-gray-600 mt-2">Are you sure you want to log out?</p><div class="mt-6 flex justify-center space-x-4"><button onclick="hideLogoutModal()" class="px-6 py-2 rounded-lg bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300">Cancel</button><button onclick="logout()" class="px-6 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700">Log Out</button></div></div></div>
     </div>
     <script>
-        // เนื้อหา JavaScript ทั้งหมดเหมือนเดิม
         const pageContents = {
             calendar: `<h2 class="text-2xl font-bold text-gray-800">Academic Calendar</h2><div class="bg-white p-4 rounded-xl shadow-md space-y-4"><div class="flex items-center space-x-3"><div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Oct</span><span class="text-xl">15</span></div><div><h4 class="font-semibold text-gray-800">Midterm Exam: SC101</h4><p class="text-sm text-gray-500">Time 09:00 - 12:00 | Room SC301</p></div></div><div class="border-t"></div><div class="flex items-center space-x-3"><div class="w-12 h-12 bg-red-100 text-red-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Oct</span><span class="text-xl">20</span></div><div><h4 class="font-semibold text-gray-800">Tuition Fee Payment Deadline</h4><p class="text-sm text-gray-500">Semester 2/2025</p></div></div><div class="border-t"></div><div class="flex items-center space-x-3"><div class="w-12 h-12 bg-gray-100 text-gray-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Nov</span><span class="text-xl">05</span></div><div><h4 class="font-semibold text-gray-800">Semester Start Date</h4><p class="text-sm text-gray-500">Semester 2/2025</p></div></div></div>`,
             notifications: `<h2 class="text-2xl font-bold text-gray-800">Notifications</h2><div class="space-y-3"><div class="bg-white p-4 rounded-xl shadow-md flex items-start space-x-3"><div class="bg-blue-100 p-2 rounded-full mt-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg></div><div><p class="text-sm text-gray-800">The library will close early on Oct 10th at 16:00.</p><p class="text-xs text-gray-400 mt-1">1 hour ago</p></div></div><div class="bg-blue-50/50 p-4 rounded-xl shadow-sm flex items-start space-x-3"><div class="bg-gray-100 p-2 rounded-full mt-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg></div><div><p class="text-sm text-gray-500">Course materials for SC101 have been uploaded.</p><p class="text-xs text-gray-400 mt-1">1 day ago</p></div></div></div>`,
@@ -85,7 +82,18 @@
         function hideLogoutModal() { document.getElementById('logout-modal').classList.add('hidden'); }
         function logout() { hideLogoutModal(); pageStack = []; navigateTo('home'); }
         document.addEventListener('DOMContentLoaded', () => { navigateTo('home'); });
-        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('/ubu-hub-app/sw.js').then(registration => { console.log('SW registered: ', registration); }, err => { console.log('SW registration failed: ', err); }); }); }
+        
+        // === จุดที่แก้ไขให้ถูกต้องสำหรับ GitHub Pages ===
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // เปลี่ยน path ให้ถูกต้อง ชี้ไปที่ sw.js ใน folder เดียวกัน
+                navigator.serviceWorker.register('sw.js').then(registration => {
+                    console.log('SW registered: ', registration);
+                }, err => {
+                    console.log('SW registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
