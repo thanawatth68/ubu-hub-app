@@ -3,292 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UBU Hub - Minimalist</title>
+    <title>UBU Hub - Prototype</title>
+    <!-- Link to Manifest file -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Theme color for browser UI -->
+    <meta name="theme-color" content="#4f46e5">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <style>
-        body { font-family: 'Sarabun', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .app-container { scrollbar-width: none; -ms-overflow-style: none; }
-        .app-container::-webkit-scrollbar { display: none; }
-        .page-content { animation: fadeIn 0.3s ease-in-out; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .app-container {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .app-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+        .page-content {
+            animation: fadeIn 0.3s ease-in-out;
+        }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes animated-gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .has-animated-bg::before {
-            content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1;
-            background: linear-gradient(270deg, #f9fafb, #f3f4f6, #e5e7eb);
-            background-size: 400% 400%; animation: animated-gradient 25s ease infinite;
-        }
-        .dark .has-animated-bg::before { background: linear-gradient(270deg, #111827, #1f2937, #111827); }
-        .dark .bg-white { background-color: #1f2937; }
-        .dark .bg-gray-50 { background-color: #111827; }
-        .dark .bg-white\/80 { background-color: rgba(31, 41, 55, 0.7); }
-        .dark .text-gray-900 { color: #f9fafb; }
-        .dark .text-gray-800 { color: #f3f4f6; }
-        .dark .text-gray-700 { color: #d1d5db; }
-        .dark .text-gray-600 { color: #9ca3af; }
-        .dark .text-gray-500 { color: #6b7280; }
-        .dark .border-b, .dark .border-t, .dark .divide-y > :not([hidden]) ~ :not([hidden]) { border-color: #374151; }
-        .dark .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3); }
-        .dark input { background-color: #374151; color: #f9fafb; border-color: #4b5563; }
-        .filter-button {
-            padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500;
-            transition: all 0.2s; color: #4b5563; background-color: transparent;
-        }
-        .dark .filter-button { color: #9ca3af; }
-        .filter-button-active { color: #4f46e5; font-weight: 700; }
-        .dark .filter-button-active { color: #a5b4fc; }
     </style>
 </head>
 <body class="bg-gray-200 flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-sm mx-auto bg-gray-50 dark:bg-gray-900 rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-800 relative has-animated-bg">
+    <!-- Mobile App Frame -->
+    <div class="w-full max-w-sm mx-auto bg-gray-50 rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-800 relative">
         <div class="h-[750px] overflow-y-auto app-container">
             
-            <header class="sticky top-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm z-20 p-4 flex justify-between items-center border-b">
+            <!-- App Header -->
+            <header class="sticky top-0 bg-white/80 backdrop-blur-sm z-10 p-4 flex justify-between items-center border-b">
                 <div class="flex items-center space-x-2">
-                    <button id="back-button" onclick="goBack()" class="hidden text-gray-600 p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
-                    <div id="header-title"><h1 class="text-xl font-bold text-indigo-700">UBU HUB</h1></div>
+                    <button id="back-button" onclick="goBack()" class="hidden text-gray-600 p-2 -ml-2 rounded-full hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <div id="header-title">
+                        <h1 class="text-xl font-bold text-indigo-700">UBU HUB</h1>
+                        <p class="text-xs text-gray-500">A central hub for UBU students</p>
+                    </div>
                 </div>
-                <div>
-                    <img src="https://placehold.co/40x40/EFEFEF/333333?text=S" class="w-9 h-9 rounded-full cursor-pointer" alt="User Profile" onclick="navigateTo('settings')">
+                <div class="flex items-center space-x-4">
+                    <button class="relative text-gray-600" onclick="navigateTo('notifications')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        <span class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span></span>
+                    </button>
+                    <img src="https://placehold.co/40x40/EFEFEF/333333?text=Somchai" class="w-9 h-9 rounded-full cursor-pointer" alt="User Profile" onclick="navigateTo('settings')">
                 </div>
             </header>
 
-            <div id="main-content-container" class="relative">
-                <!-- Pages will be dynamically inserted here -->
+            <!-- Main Content Area -->
+            <div id="main-content">
+                <!-- Page 1: Home -->
+                <main id="page-home" class="page-content p-4 space-y-6">
+                    <div><h2 class="text-2xl font-bold text-gray-800">Hello, Somchai</h2><p class="text-gray-600">Here's your curated news and information.</p></div>
+                    <section>
+                        <h3 class="text-lg font-bold text-gray-800 mb-3">Your Feed (Personalized)</h3>
+                        <div class="space-y-4">
+                            <a href="javascript:void(0);" onclick="showDetails('Scholarship Application Announcement for 2025', 'The Division of Student Affairs is now accepting applications for the annual scholarship program. Interested students must submit their applications by October 31, 2025. Please see the full criteria and download the application form from the university website.', ['Scholarship', 'All Years'])" class="block bg-white p-4 rounded-xl shadow-md border-l-4 border-green-500 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-green-100 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd" /></svg></div>
+                                    <div><h4 class="font-bold text-gray-900">Scholarship Application Announcement for 2025</h4><p class="text-sm text-gray-600 mt-1">The Division of Student Affairs is now accepting applications...</p><div class="mt-2 flex flex-wrap gap-2"><span class="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded-full">Scholarship</span><span class="text-xs font-medium bg-gray-100 text-gray-800 px-2 py-1 rounded-full">All Years</span></div></div>
+                                </div>
+                            </a>
+                            <a href="javascript:void(0);" onclick="showDetails('Computer Proficiency Test Schedule', 'For 3rd-year students in the Faculty of Science who have not yet met the requirements, the proficiency test will be held on November 15, 2025. Please register through the faculty\'s online portal.', ['Faculty of Science', '3rd Year'])" class="block bg-white p-4 rounded-xl shadow-md border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start space-x-3">
+                                    <div class="bg-blue-100 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg></div>
+                                    <div><h4 class="font-bold text-gray-900">Computer Proficiency Test Schedule</h4><p class="text-sm text-gray-600 mt-1">For 3rd-year students who have not yet met the requirements...</p><div class="mt-2 flex flex-wrap gap-2"><span class="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Faculty of Science</span><span class="text-xs font-medium bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">3rd Year</span></div></div>
+                                </div>
+                            </a>
+                        </div>
+                    </section>
+                </main>
+                
+                <main id="page-calendar" class="page-content p-4 space-y-6 hidden"></main>
+                <main id="page-notifications" class="page-content p-4 space-y-6 hidden"></main>
+                <main id="page-settings" class="page-content p-4 space-y-6 hidden"></main>
+                
+                <main id="page-details" class="page-content p-4 space-y-4 hidden">
+                    <h2 id="details-title" class="text-2xl font-bold text-gray-800"></h2>
+                    <div id="details-tags" class="flex flex-wrap gap-2"></div>
+                    <p id="details-content" class="text-gray-700 leading-relaxed"></p>
+                </main>
+
+                <main id="page-interests" class="page-content p-4 space-y-4 hidden"></main>
+                
+                <main id="page-edit-profile" class="page-content p-4 space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-gray-800">Edit Profile</h2>
+                    <div class="space-y-4">
+                        <div><label for="name" class="text-sm font-medium text-gray-700">Full Name</label><input type="text" id="name" value="Somchai Jaidee" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></div>
+                        <div><label for="faculty" class="text-sm font-medium text-gray-700">Faculty</label><input type="text" id="faculty" value="Faculty of Science" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></div>
+                        <div><label for="year" class="text-sm font-medium text-gray-700">Year of Study</label><input type="number" id="year" value="3" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></div>
+                        <button onclick="goBack()" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors">Save Changes</button>
+                    </div>
+                </main>
+
+                <main id="page-notification-settings" class="page-content p-4 space-y-4 hidden">
+                     <h2 class="text-2xl font-bold text-gray-800">Notification Settings</h2>
+                     <div class="bg-white rounded-xl shadow-md divide-y">
+                        <label class="p-4 flex justify-between items-center w-full cursor-pointer"><span class="text-gray-800">In-App Notifications</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300" checked></label>
+                        <label class="p-4 flex justify-between items-center w-full cursor-pointer"><span class="text-gray-800">Email Notifications</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300" checked></label>
+                        <label class="p-4 flex justify-between items-center w-full cursor-pointer"><span class="text-gray-800">SMS for Urgent Alerts</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"></label>
+                     </div>
+                </main>
+
             </div>
 
             <div class="h-20"></div> 
         </div>
 
-        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 w-full max-w-sm mx-auto bg-white border-t rounded-b-3xl z-10">
+        <!-- Bottom Navigation -->
+        <nav id="bottom-nav" class="absolute bottom-0 left-0 right-0 w-full max-w-sm mx-auto bg-white border-t rounded-b-3xl">
             <div class="flex justify-around py-2">
-                <a id="nav-home" href="javascript:void(0);" onclick="navigateTo('home')" class="nav-item flex flex-col items-center text-indigo-600 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg><span class="text-xs font-bold">Home</span></a>
-                <a id="nav-services" href="javascript:void(0);" onclick="navigateTo('services')" class="nav-item flex flex-col items-center text-gray-500 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg><span class="text-xs">Services</span></a>
-                <a id="nav-notifications" href="javascript:void(0);" onclick="navigateTo('notifications')" class="nav-item flex flex-col items-center text-gray-500 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg><span class="text-xs">Notifications</span></a>
-                <a id="nav-settings" href="javascript:void(0);" onclick="navigateTo('settings')" class="nav-item flex flex-col items-center text-gray-500 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0 3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span class="text-xs">Settings</span></a>
+                <a id="nav-home" href="javascript:void(0);" onclick="navigateTo('home')" class="flex flex-col items-center text-indigo-600 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" /></svg><span class="text-xs font-bold">Home</span></a>
+                <a id="nav-calendar" href="javascript:void(0);" onclick="navigateTo('calendar')" class="flex flex-col items-center text-gray-500 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg><span class="text-xs">Calendar</span></a>
+                <a id="nav-notifications" href="javascript:void(0);" onclick="navigateTo('notifications')" class="flex flex-col items-center text-gray-500 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg><span class="text-xs">Notifications</span></a>
+                <a id="nav-settings" href="javascript:void(0);" onclick="navigateTo('settings')" class="flex flex-col items-center text-gray-500 w-1/4"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0 3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg><span class="text-xs">Settings</span></a>
             </div>
         </nav>
+
+        <!-- Logout Modal -->
+        <div id="logout-modal" class="hidden absolute inset-0 bg-black/40 z-20 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 text-center shadow-xl max-w-xs mx-auto">
+                <h3 class="text-lg font-bold text-gray-900">Log Out</h3>
+                <p class="text-sm text-gray-600 mt-2">Are you sure you want to log out?</p>
+                <div class="mt-6 flex justify-center space-x-4">
+                    <button onclick="hideLogoutModal()" class="px-6 py-2 rounded-lg bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300">Cancel</button>
+                    <button onclick="logout()" class="px-6 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700">Log Out</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- Dark Mode Logic ---
-        function applyDarkMode() {
-            if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
-            else document.documentElement.classList.remove('dark');
-        }
-        function toggleDarkMode() {
-            document.documentElement.classList.toggle('dark');
-            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-        }
-        applyDarkMode();
-
-        // --- Page Content & Data ---
         const pageContents = {
-            home: `
-                <div class="page-content p-4 space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Hello, Somchai!</h2>
-                    <div class="relative"><input id="search-input" type="text" placeholder="Search news..." class="w-full pl-4 pr-10 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"></div>
-                    <div class="flex space-x-2"><button data-filter="all" class="filter-button filter-button-active">All</button><button data-filter="scholarship" class="filter-button">Scholarship</button><button data-filter="activity" class="filter-button">Activity</button></div>
-                    <div id="news-feed" class="space-y-3"></div>
-                    <div id="no-results" class="text-center text-gray-500 hidden py-8">No results found.</div>
-                </div>`,
-            services: `
-                <div class="page-content p-4">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Services</h2>
-                    <p class="text-gray-600">This is a placeholder for student services.</p>
+            calendar: `
+                <h2 class="text-2xl font-bold text-gray-800">Academic Calendar</h2>
+                <div class="bg-white p-4 rounded-xl shadow-md space-y-4">
+                    <div class="flex items-center space-x-3"><div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Oct</span><span class="text-xl">15</span></div><div><h4 class="font-semibold text-gray-800">Midterm Exam: SC101</h4><p class="text-sm text-gray-500">Time 09:00 - 12:00 | Room SC301</p></div></div><div class="border-t"></div>
+                    <div class="flex items-center space-x-3"><div class="w-12 h-12 bg-red-100 text-red-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Oct</span><span class="text-xl">20</span></div><div><h4 class="font-semibold text-gray-800">Tuition Fee Payment Deadline</h4><p class="text-sm text-gray-500">Semester 2/2025</p></div></div><div class="border-t"></div>
+                    <div class="flex items-center space-x-3"><div class="w-12 h-12 bg-gray-100 text-gray-700 rounded-lg flex flex-col items-center justify-center font-bold"><span class="text-xs">Nov</span><span class="text-xl">05</span></div><div><h4 class="font-semibold text-gray-800">Semester Start Date</h4><p class="text-sm text-gray-500">Semester 2/2025</p></div></div>
                 </div>`,
             notifications: `
-                <div class="page-content p-4">
-                    <div class="flex justify-between items-center"><h2 class="text-2xl font-bold text-gray-800">Notifications</h2><button class="text-sm text-indigo-600 font-medium" onclick="markAllRead()">Mark all as read</button></div>
-                    <div id="notification-list" class="space-y-2 mt-4"></div>
+                <h2 class="text-2xl font-bold text-gray-800">Notifications</h2>
+                <div class="space-y-3">
+                    <div class="bg-white p-4 rounded-xl shadow-md flex items-start space-x-3"><div class="bg-blue-100 p-2 rounded-full mt-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg></div><div><p class="text-sm text-gray-800">The library will close early on Oct 10th at 16:00.</p><p class="text-xs text-gray-400 mt-1">1 hour ago</p></div></div>
+                    <div class="bg-blue-50/50 p-4 rounded-xl shadow-sm flex items-start space-x-3"><div class="bg-gray-100 p-2 rounded-full mt-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg></div><div><p class="text-sm text-gray-500">Course materials for SC101 have been uploaded.</p><p class="text-xs text-gray-400 mt-1">1 day ago</p></div></div>
                 </div>`,
             settings: `
-                <div class="page-content p-4">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Settings</h2>
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm divide-y dark:divide-gray-700">
-                        <a href="javascript:void(0);" onclick="navigateTo('editProfile')" class="p-5 flex justify-between items-center"><span class="text-gray-800">Edit Profile</span><span class="text-gray-400">&gt;</span></a>
-                        <label class="p-5 flex justify-between items-center cursor-pointer"><span class="text-gray-800">Dark Mode</span><input type="checkbox" onchange="toggleDarkMode()" id="dark-mode-toggle" class="h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"></label>
-                    </div>
+                <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
+                <div class="bg-white rounded-xl shadow-md divide-y">
+                    <a href="javascript:void(0);" onclick="navigateTo('edit-profile')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Edit Profile</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
+                    <a href="javascript:void(0);" onclick="navigateTo('interests')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Manage Interests</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
+                    <a href="javascript:void(0);" onclick="navigateTo('notification-settings')" class="p-4 flex justify-between items-center w-full text-left"><span class="text-gray-800">Notification Settings</span><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></a>
+                    <a href="javascript:void(0);" onclick="showLogoutModal()" class="p-4 flex justify-between items-center w-full text-left text-red-600"><span>Log Out</span></a>
                 </div>`,
-            editProfile: `
-                <div class="page-content p-4">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Edit Profile</h2>
-                     <div class="space-y-4">
-                        <div><label class="text-sm font-medium text-gray-700">Full Name</label><input type="text" value="Somchai Jaidee" class="mt-1 block w-full px-3 py-2 border rounded-md"></div>
-                        <button onclick="goBack()" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg">Save</button>
-                    </div>
+            interests: `
+                <h2 class="text-2xl font-bold text-gray-800">Manage Interests</h2>
+                <p class="text-sm text-gray-600">Select topics to personalize your feed.</p>
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><span class="font-semibold text-gray-800">Scholarships</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300" checked></label>
+                    <label class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><span class="font-semibold text-gray-800">Internships</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"></label>
+                    <label class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><span class="font-semibold text-gray-800">Sports & Recreation</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300" checked></label>
+                    <label class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><span class="font-semibold text-gray-800">Workshops</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"></label>
+                    <label class="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm"><span class="font-semibold text-gray-800">Volunteer Activities</span><input type="checkbox" class="h-6 w-6 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"></label>
                 </div>`,
-            details: `<div class="page-content p-4" id="details-content"></div>`
         };
+        let pageStack = [];
 
-        const newsData = [
-            { id: 1, title: 'Scholarship Announcement', short_desc: 'The Division of Student Affairs is now accepting applications...', full_content: 'The Division of Student Affairs is now accepting applications for the annual scholarship program for the year 2025. Interested students from all faculties must submit their applications and required documents by October 31, 2025.', tags: ['scholarship'] },
-            { id: 2, title: 'UBU Games 2025', short_desc: 'Join the annual sports competition starting next month.', full_content: 'Join the annual sports competition starting next month. All students are welcome to participate in various sports. Registration is open until the end of this month.', tags: ['activity'] }
-        ];
-
-        let notificationsData = [
-            { id: 1, title: 'Library Announcement', time: '1 hour ago', read: false, content: 'The main library will be closed early on October 10th at 16:00 for system maintenance.' },
-            { id: 2, title: 'Course Update', time: '1 day ago', read: false, content: 'New materials for course SC101 have been uploaded.' },
-            { id: 3, title: 'Welcome to UBU Hub!', time: '3 days ago', read: true, content: 'Welcome to your new central hub for all university information.' }
-        ];
-
-        // --- Core Navigation & Rendering ---
-        const mainContent = document.getElementById('main-content-container');
-        const navItems = document.querySelectorAll('.nav-item');
-        let pageStack = ['home'];
-
-        function renderCurrentPage() {
-            const pageName = pageStack[pageStack.length - 1];
-            mainContent.innerHTML = pageContents[pageName] || `<div class="p-4"><h2 class="text-2xl font-bold">Page Not Found</h2></div>`;
-            
-            if (pageName === 'home') initializeHomePage();
-            if (pageName === 'notifications') renderNotificationsPage();
-            if (pageName === 'settings') {
-                 document.getElementById('dark-mode-toggle').checked = document.documentElement.classList.contains('dark');
+        function renderPage(pageName) {
+            const allPages = document.querySelectorAll('.page-content');
+            allPages.forEach(p => p.classList.add('hidden'));
+            const targetPage = document.getElementById(`page-${pageName}`);
+            if (targetPage) {
+                if (pageContents[pageName] && targetPage.innerHTML.trim() === '') {
+                     targetPage.innerHTML = pageContents[pageName];
+                }
+                targetPage.classList.remove('hidden');
             }
-
-            updateNavHighlight();
-            updateHeader();
+            const mainPages = ['home', 'calendar', 'notifications', 'settings'];
+            const isSubPage = !mainPages.includes(pageName);
+            document.getElementById('back-button').classList.toggle('hidden', !isSubPage);
+            document.getElementById('header-title').classList.toggle('hidden', isSubPage);
+            document.getElementById('bottom-nav').classList.toggle('hidden', isSubPage);
+            updateNavHighlight(pageName);
+            document.querySelector('.app-container').scrollTop = 0;
         }
-
+        
         function navigateTo(pageName) {
-            const mainTabs = ['home', 'services', 'notifications', 'settings'];
-            if (mainTabs.includes(pageName)) {
-                pageStack = [pageName];
-            } else {
-                if (pageStack[pageStack.length - 1] !== pageName) pageStack.push(pageName);
+            const currentPage = pageStack.length > 0 ? pageStack[pageStack.length - 1] : null;
+            if (pageName !== currentPage) {
+                pageStack.push(pageName);
             }
-            renderCurrentPage();
+            renderPage(pageName);
         }
 
         function goBack() {
+            if (document.getElementById('logout-modal').classList.contains('hidden') === false) {
+                hideLogoutModal();
+                return;
+            }
             if (pageStack.length > 1) {
                 pageStack.pop();
-                renderCurrentPage();
+                renderPage(pageStack[pageStack.length - 1]);
             }
         }
 
-        function updateNavHighlight() {
-            const currentMainPage = pageStack[0];
-            navItems.forEach(item => {
-                const span = item.querySelector('span');
-                if (item.id === `nav-${currentMainPage}`) {
-                    item.classList.add('text-indigo-600');
-                    item.classList.remove('text-gray-500');
-                    span.classList.add('font-bold');
-                } else {
-                    item.classList.remove('text-indigo-600');
-                    span.classList.remove('font-bold');
-                    item.classList.add('text-gray-500');
-                }
-            });
-        }
-
-        function updateHeader() {
-            document.getElementById('back-button').classList.toggle('hidden', pageStack.length <= 1);
-            document.getElementById('header-title').classList.toggle('hidden', pageStack.length > 1);
-        }
-        
-        // --- Page Specific Logic ---
-        function showDetails(detailsObj) {
+        function showDetails(title, content, tags) {
+            // First, ensure the details page is visible so we can find its elements
             navigateTo('details');
-            setTimeout(() => {
-                const detailsContent = document.getElementById('details-content');
-                if (detailsContent) {
-                    detailsContent.innerHTML = `
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4">${detailsObj.title}</h2>
-                        <p class="text-gray-700">${detailsObj.content}</p>
-                    `;
-                }
-            }, 0);
+
+            document.getElementById('details-title').textContent = title;
+            document.getElementById('details-content').textContent = content;
+            const tagsContainer = document.getElementById('details-tags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'text-xs font-medium bg-gray-100 text-gray-800 px-2 py-1 rounded-full';
+                span.textContent = tag;
+                tagsContainer.appendChild(span);
+            });
         }
 
-        function initializeHomePage() {
-            const feed = document.getElementById('news-feed');
-            const searchInput = document.getElementById('search-input');
-            const filterButtons = document.querySelectorAll('.filter-button');
-            const noResults = document.getElementById('no-results');
-
-            function displayNews(filter = 'all', search = '') {
-                const filteredNews = newsData.filter(item => 
-                    (filter === 'all' || item.tags.includes(filter)) &&
-                    (item.title.toLowerCase().includes(search) || item.short_desc.toLowerCase().includes(search))
-                );
-
-                if (filteredNews.length > 0) {
-                    feed.innerHTML = filteredNews.map(item => {
-                        const itemData = { title: item.title, content: item.full_content };
-                        return `
-                        <a href="javascript:void(0);" onclick='showDetails(${JSON.stringify(itemData)})' 
-                           class="news-item block bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-                            <h4 class="font-semibold text-gray-900">${item.title}</h4>
-                            <p class="text-sm text-gray-600 mt-1">${item.short_desc}</p>
-                        </a>`;
-                    }).join('');
-                    noResults.classList.add('hidden');
-                } else {
-                    feed.innerHTML = '';
-                    noResults.classList.remove('hidden');
-                }
+        function updateNavHighlight(pageName) {
+            const mainPages = ['home', 'calendar', 'notifications', 'settings'];
+            
+            // Find which main page the current sub-page belongs to
+            let basePage = 'home'; // Default
+            if (mainPages.includes(pageName)) {
+                basePage = pageName;
+            } else if (['edit-profile', 'interests', 'notification-settings'].includes(pageName)) {
+                basePage = 'settings';
             }
 
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    filterButtons.forEach(btn => btn.classList.remove('filter-button-active'));
-                    button.classList.add('filter-button-active');
-                    displayNews(button.dataset.filter, searchInput.value.toLowerCase());
-                });
-            });
 
-            searchInput.addEventListener('input', () => {
-                const activeFilter = document.querySelector('.filter-button-active').dataset.filter;
-                displayNews(activeFilter, searchInput.value.toLowerCase());
+            mainPages.forEach(p => {
+                const link = document.getElementById(`nav-${p}`);
+                const span = link.querySelector('span');
+                if (p === basePage) {
+                    link.classList.remove('text-gray-500'); link.classList.add('text-indigo-600'); span.classList.add('font-bold');
+                } else {
+                    link.classList.remove('text-indigo-600'); link.classList.add('text-gray-500'); span.classList.remove('font-bold');
+                }
             });
-
-            displayNews();
         }
         
-        function renderNotificationsPage() {
-            const list = document.getElementById('notification-list');
-            if (!list) return; // Add a guard clause
-            list.innerHTML = notificationsData.map(n => `
-                <a href="javascript:void(0);" onclick="handleNotificationClick(${n.id})"
-                   class="notification-item block p-4 rounded-lg ${n.read ? 'bg-transparent' : 'bg-white dark:bg-gray-800 shadow-sm'}">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${n.read ? 'bg-gray-300 dark:bg-gray-600' : 'bg-blue-500'}"></div>
-                        <div>
-                            <p class="font-semibold ${n.read ? 'text-gray-500' : 'text-gray-800'}">${n.title}</p>
-                            <p class="text-xs text-gray-400 mt-1">${n.time}</p>
-                        </div>
-                    </div>
-                </a>`).join('');
+        function showLogoutModal() { document.getElementById('logout-modal').classList.remove('hidden'); }
+        function hideLogoutModal() { document.getElementById('logout-modal').classList.add('hidden'); }
+        function logout() {
+            hideLogoutModal();
+            pageStack = []; // Clear history
+            navigateTo('home'); // Go back to home
         }
 
-        function handleNotificationClick(notificationId) {
-            const notification = notificationsData.find(n => n.id === notificationId);
-            if (notification) {
-                notification.read = true;
-                showDetails({ title: notification.title, content: notification.content });
-            }
+        document.addEventListener('DOMContentLoaded', () => { navigateTo('home'); });
+        
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, err => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+          });
         }
-
-        function markAllRead() {
-            notificationsData.forEach(n => n.read = true);
-            renderNotificationsPage();
-        }
-
-        // --- Initial Load ---
-        document.addEventListener('DOMContentLoaded', renderCurrentPage);
     </script>
+
 </body>
 </html>
 
